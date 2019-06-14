@@ -24,3 +24,20 @@ type ArchiveAPIVM struct {
 	Success bool   `json:"success"`
 	Posts   []Post `json:"posts"`
 }
+
+type CommentAPIVM struct {
+	Success  bool         `json:"success"`
+	ID       int          `json:"id"`
+	Comments []db.Comment `json:"comments"`
+}
+
+type ErrorVM struct {
+	Success bool   `json:"success"`
+	Reason  string `json:"reason"`
+}
+
+func Error(reason string) *ErrorVM {
+	return &ErrorVM{
+		Reason: reason,
+	}
+}

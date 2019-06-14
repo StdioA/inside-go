@@ -13,6 +13,7 @@ func GetPost(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.String(http.StatusBadRequest, "wrong id")
+		return
 	}
 	post := db.GetExistPost(id, true)
 	prevID, nextID := post.PrevAndNextID()
@@ -31,7 +32,26 @@ func GetPost(c *gin.Context) {
 }
 
 func ListComments(c *gin.Context) {
-
+	var (
+		postID int
+		err    error
+	)
+	postIDS := c.Param("id")
+	if postID, err = strconv.Atoi(postIDS); err != nil {
+		c.String(http.StatusBadRequest, "ID format error")
+		return
+	}
+	post := db.GetExistPost(postID, true)
+	if post.ID == 0 {
+		c.JSON(http.StatusNotFound, vm.Error("Post does not exist"))
+		return
+	}
+	vm := vm.CommentAPIVM{
+		Success:  true,
+		ID:       postID,
+		Comments: post.Comments,
+	}
+	c.JSON(http.StatusOK, vm)
 }
 
 func Archive(c *gin.Context) {
