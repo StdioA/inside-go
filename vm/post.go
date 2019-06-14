@@ -34,6 +34,10 @@ type CommentAPIVM struct {
 	Comments []Comment `json:"comments"`
 }
 
+type SuccessVM struct {
+	Success bool `json:"success"`
+}
+
 type ErrorVM struct {
 	Success bool   `json:"success"`
 	Reason  string `json:"reason"`

@@ -34,6 +34,20 @@ func (post *Post) PrevAndNextID() (uint, uint) {
 	return pPost.ID, nPost.ID
 }
 
+func (post *Post) LoadComments() {
+	db.Model(post).Related(&(post.Comments))
+}
+
+func (post *Post) CreateComment(author, content string) *Comment {
+	comment := Comment{
+		PostID:  post.ID,
+		Author:  author,
+		Content: content,
+	}
+	db.Create(&comment)
+	return &comment
+}
+
 func GetPost(id int) *Post {
 	var post Post
 	db.First(&post, id)
@@ -43,7 +57,6 @@ func GetPost(id int) *Post {
 func GetExistPost(id int, exists bool) *Post {
 	var post Post
 	db.Where("id=? AND exist=?", id, exists).First(&post)
-	db.Model(&post).Related(&(post.Comments))
 	fmt.Println(post)
 	return &post
 }

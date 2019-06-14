@@ -35,7 +35,7 @@ var app = new Vue({
 				author: $("input[name=author]").val(),
 				content: $("input[name=content]").val()
 			};
-			$.post("/api/comment/"+this.post_id, post_data, function (data) {
+			$.post("/api/comments/"+this.post_id, post_data, function (data) {
 				if (data.success) {
 					app.post.comments.push({
 						author: post_data.author,

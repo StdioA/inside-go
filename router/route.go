@@ -16,6 +16,7 @@ func Register(router *gin.Engine) {
 	apiGroup := router.Group("/api")
 	apiGroup.GET("/posts/:id", api.GetPost)
 	apiGroup.GET("/comments/:id", api.ListComments)
+	apiGroup.POST("/comments/:id", api.CreateComment)
 
 	apiGroup.GET("/archive", api.Archive)
 	apiGroup.GET("/archive/:id", api.Archive)

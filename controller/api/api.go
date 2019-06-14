@@ -16,6 +16,7 @@ func GetPost(c *gin.Context) {
 		return
 	}
 	post := db.GetExistPost(id, true)
+	post.LoadComments()
 	prevID, nextID := post.PrevAndNextID()
 	postVM := vm.PostAPIVM{
 		Success:    true,
@@ -41,12 +42,32 @@ func ListComments(c *gin.Context) {
 		c.JSON(http.StatusNotFound, vm.Error("Post does not exist"))
 		return
 	}
+	post.LoadComments()
 	vm := vm.CommentAPIVM{
 		Success:  true,
 		ID:       postID,
 		Comments: vm.SerializeComments(post.Comments),
 	}
 	c.JSON(http.StatusOK, vm)
+}
+
+func CreateComment(c *gin.Context) {
+	var (
+		postID int
+		err    error
+	)
+	postIDS := c.Param("id")
+	if postID, err = strconv.Atoi(postIDS); err != nil {
+		c.String(http.StatusBadRequest, "ID format error")
+		return
+	}
+	post := db.GetExistPost(postID, true)
+	if post.ID == 0 {
+		c.JSON(http.StatusNotFound, vm.Error("Post does not exist"))
+		return
+	}
+	_ = post.CreateComment(c.PostForm("author"), c.PostForm("content"))
+	c.JSON(http.StatusOK, vm.SuccessVM{true})
 }
 
 func Archive(c *gin.Context) {
