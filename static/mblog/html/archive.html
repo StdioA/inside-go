@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+	<title>Archive - Inside</title>
+	<link rel="stylesheet" href="/static/mblog/css/archive.min.css">
+	<script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+	<script src="//cdn.bootcss.com/vue/1.0.17/vue.min.js"></script>
+	<!-- <script src="/static/mblog/js/jquery.min.js"></script> -->
+	<!-- <script src="/static/mblog/js/vue.js"></script> -->
+</head>
+<body>
+	<h1>Archive</h1>
+	<template id="post-note">
+		<div class="post-it-note {{* color }}" id="post-{{* post.id }}" @click="enter(post)">
+			<div class="hash">#{{ post.id }}</div>
+			<div class="content">
+				<p v-for="line in get_summary(post)" track-by="$index">
+					{{ line }}
+				</p>
+			</div>
+			<div class="time">{{ post.pub_date }}</div>
+		</div>
+	</template>
+	<div id="archives">
+		<postnote v-for="post in posts" :post.once="post" v-show="ready" transition="fade"></postnote>
+		<div class="more" v-show="ready" :class="{'disabled':more.posts_end}" @mouseover="get_more">{{ !more.posts_end?"More…":"" }}</div>
+	</div>
+	<script src="/static/mblog/js/archive.js"></script>
+</body>
+</html>

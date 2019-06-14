@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+	<title>Inside</title>
+	<link rel="stylesheet" href="/static/mblog/css/common.min.css">
+	<script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+	<script src="//cdn.bootcss.com/vue/1.0.17/vue.min.js"></script>
+	<!-- <script src="/static/mblog/js/jquery.min.js"></script> -->
+	<!-- <script src="/static/mblog/js/vue.js"></script> -->
+</head>
+<body>
+	<div id="content_bg" post-id="{{ post_id }}">
+		<div class="mini row">
+			<div class="col v2 right">
+				<p><a href="/archive">Archive</a></p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col v2 center">
+				<h2>Inside</h2>
+			</div>
+		</div>
+		<div v-show="show" transition="fade">
+			<template v-if="!error.status">
+				<div class="row">
+					<div class="col v2">
+						<p v-for="line in post.content.split('\n')" track-by="$index">{{{ line }}}</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col v2 right time">
+						<p>{{ post.pub_date }}</p>
+					</div>
+				</div>
+			</template>
+			<template v-else>
+				<div class="center row">
+					<div class="col v2">
+						<h2>{{ error.message }}</h2>
+					</div>
+				</div>
+			</template>
+			<div class="row">
+				<div class="col v2">
+					<h3>Comments</h3>
+					<p v-for="comment in post.comments">{{ comment.author }}：{{ comment.content }}</p>
+					<div class="center form">
+						<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+						<p>
+							<label for="comment_nickname" class="form-l" for="author">昵称：</label>
+							<input type="text" class="form-r" name="author" />
+						</p>
+						<p>
+							<label for="comment_nickname" class="form-l" for="content">内容：</label>
+							<input type="text" class="form-r" name="content" />
+						</p>
+						<p>
+							<button @click="add_comment" value="评论">评论</button>
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col v2 center">
+					<div class="col {{ previous_id?'':'disabled' }}">
+						<button @click="jump" id="pageup">上一篇</button>
+					</div>
+					<div class="col {{ next_id?'':'disabled' }}">
+						<button @click="jump" id="pagedown">下一篇</button>
+					</div>
+				</div>
+			</div>		
+		</div>
+	</div>
+	<script type="text/javascript" src="/static/mblog/js/main.js"></script>
+</body>
+</html>
