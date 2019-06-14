@@ -1,6 +1,8 @@
 package db
 
 import (
+	"fmt"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
@@ -9,16 +11,16 @@ var db *gorm.DB
 
 type Post struct {
 	gorm.Model
-	Content  string
+	Content  string `json:"content"`
 	Exist    bool
-	Comments []Comment
+	Comments []Comment `json:"comments"`
 }
 
 type Comment struct {
 	gorm.Model
-	PostID  uint `gorm:"index,FOREIGNKEY"`
-	Content string
-	Author  string
+	PostID  uint   `gorm:"index,ForeignKey:PostID"`
+	Content string `json:"content"`
+	Author  string `json:"author"`
 }
 
 func (post *Post) PrevAndNextID() (uint, uint) {
@@ -42,7 +44,22 @@ func GetExistPost(id int, exists bool) *Post {
 	var post Post
 	db.Where("id=? AND exist=?", id, exists).First(&post)
 	db.Model(&post).Related(&(post.Comments))
+	fmt.Println(post)
 	return &post
+}
+
+func ListPosts(id, count int) []Post {
+	var result []Post
+	query := map[string]interface{}{
+		"exist": true,
+	}
+
+	querySet := db.Where(query)
+	if id > 0 {
+		querySet = querySet.Where("id <= ?", id)
+	}
+	querySet.Order("id desc").Limit(count).Find(&result)
+	return result
 }
 
 func init() {

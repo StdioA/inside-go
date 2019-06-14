@@ -1,17 +1,16 @@
 package vm
 
-import "time"
+import (
+	"time"
+
+	"github.com/stdioa/inside-go/db"
+)
 
 type Post struct {
-	ID        uint      `json:"id"`
-	Content   string    `json:"content"`
-	CreatedAt time.Time `json:"pub_date"`
-	Comments  []Comment `json:"comments"`
-}
-
-type Comment struct {
-	Content string `json:"content"`
-	Author  string `json:"author"`
+	ID        uint         `json:"id"`
+	Content   string       `json:"content"`
+	CreatedAt time.Time    `json:"pub_date"`
+	Comments  []db.Comment `json:"comments"`
 }
 
 type PostAPIVM struct {
@@ -19,4 +18,9 @@ type PostAPIVM struct {
 	PreviousID uint `json:"previous_id"`
 	NextID     uint `json:"next_id"`
 	Post       Post `json:"post"`
+}
+
+type ArchiveAPIVM struct {
+	Success bool   `json:"success"`
+	Posts   []Post `json:"posts"`
 }

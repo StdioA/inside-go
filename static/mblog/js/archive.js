@@ -13,7 +13,7 @@ var post_note = Vue.component("postnote", {
   methods: {
     enter: function (post) {
       var post_id = post.id;
-      location.href = "/"+post_id;
+      location.href = "/mblog/posts/"+post_id;
     },
     get_summary: function (post) {
       var summary = post.content.split("\n").slice(0,3).map(function (line) {

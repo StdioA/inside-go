@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -17,14 +16,6 @@ func GetPost(c *gin.Context) {
 	}
 	post := db.GetExistPost(id, true)
 	prevID, nextID := post.PrevAndNextID()
-	commentVM := make([]vm.Comment, 0)
-
-	for _, cmt := range post.Comments {
-		commentVM = append(commentVM, vm.Comment{
-			Content: cmt.Content,
-			Author:  cmt.Author,
-		})
-	}
 	postVM := vm.PostAPIVM{
 		Success:    true,
 		PreviousID: prevID,
@@ -33,7 +24,7 @@ func GetPost(c *gin.Context) {
 			post.ID,
 			post.Content,
 			post.CreatedAt,
-			commentVM,
+			post.Comments,
 		},
 	}
 	c.JSON(http.StatusOK, postVM)
@@ -44,10 +35,25 @@ func ListComments(c *gin.Context) {
 }
 
 func Archive(c *gin.Context) {
-	id, count := c.Param("id"), c.Param("count")
-	// 都是 string
-	fmt.Printf("%T %v\n", id, id)
-	fmt.Printf("%T %v\n", count, count)
-
-	c.Done()
+	idS, countS := c.Param("id"), c.Param("count")
+	// 0 if id == ""
+	id, _ := strconv.Atoi(idS)
+	count, _ := strconv.Atoi(countS)
+	if count == 0 {
+		count = 6
+	}
+	posts := db.ListPosts(id, count)
+	postList := make([]vm.Post, 0, len(posts))
+	for _, post := range posts {
+		postList = append(postList, vm.Post{
+			ID:        post.ID,
+			Content:   post.Content,
+			CreatedAt: post.CreatedAt,
+		})
+	}
+	postVM := vm.ArchiveAPIVM{
+		Success: true,
+		Posts:   postList,
+	}
+	c.JSON(http.StatusOK, postVM)
 }
