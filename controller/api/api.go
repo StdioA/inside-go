@@ -21,12 +21,7 @@ func GetPost(c *gin.Context) {
 		Success:    true,
 		PreviousID: prevID,
 		NextID:     nextID,
-		Post: vm.Post{
-			post.ID,
-			post.Content,
-			post.CreatedAt,
-			post.Comments,
-		},
+		Post:       vm.SerializePost(post),
 	}
 	c.JSON(http.StatusOK, postVM)
 }
@@ -49,7 +44,7 @@ func ListComments(c *gin.Context) {
 	vm := vm.CommentAPIVM{
 		Success:  true,
 		ID:       postID,
-		Comments: post.Comments,
+		Comments: vm.SerializeComments(post.Comments),
 	}
 	c.JSON(http.StatusOK, vm)
 }
@@ -63,17 +58,9 @@ func Archive(c *gin.Context) {
 		count = 6
 	}
 	posts := db.ListPosts(id, count)
-	postList := make([]vm.Post, 0, len(posts))
-	for _, post := range posts {
-		postList = append(postList, vm.Post{
-			ID:        post.ID,
-			Content:   post.Content,
-			CreatedAt: post.CreatedAt,
-		})
-	}
 	postVM := vm.ArchiveAPIVM{
 		Success: true,
-		Posts:   postList,
+		Posts:   vm.SerializePosts(posts),
 	}
 	c.JSON(http.StatusOK, postVM)
 }
