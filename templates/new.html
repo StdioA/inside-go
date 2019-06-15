@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html lang="zh">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-    <title>Add a Post</title>
-    <link rel="stylesheet" href="/static/mblog/css/common.min.css">
-</head>
-
-<body>
+{{ define "title" }}Add a Post{{ end }}
+{{ define "library" }}{{ end }}
+{{ define "index" }}
     <div id="content_bg">
         <h1>New</h1>
         <form action="./new" method="post">
@@ -16,5 +8,4 @@
             <input type="submit" value="提交"></input>
         </form>
     </div>
-</body>
-</html>
+{{ end }}

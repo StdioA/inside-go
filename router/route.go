@@ -1,6 +1,9 @@
 package router
 
 import (
+	"path/filepath"
+
+	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
 	"github.com/stdioa/inside-go/controller/api"
 	"github.com/stdioa/inside-go/controller/post"
@@ -11,10 +14,8 @@ var authHandler = gin.BasicAuth(gin.Accounts{
 })
 
 func Register(router *gin.Engine) {
-	loadTemplates("templates/")
-
 	router.Static("/static", "./static")
-	router.LoadHTMLGlob("templates/*")
+	router.HTMLRender = loadTemplates("./templates")
 
 	router.GET("/", post.Index)
 	router.GET("/archive", post.Archive)
@@ -34,4 +35,27 @@ func Register(router *gin.Engine) {
 	apiGroup.GET("/archive", api.Archive)
 	apiGroup.GET("/archive/:id", api.Archive)
 	apiGroup.GET("/archive/:id/counts/:count", api.Archive)
+}
+
+func loadTemplates(templatesDir string) multitemplate.Renderer {
+	r := multitemplate.NewRenderer()
+
+	layouts, err := filepath.Glob(templatesDir + "/layouts/*.html")
+	if err != nil {
+		panic(err.Error())
+	}
+
+	includes, err := filepath.Glob(templatesDir + "/*.html")
+	if err != nil {
+		panic(err.Error())
+	}
+
+	// Generate our templates map from our layouts/ and includes/ directories
+	for _, include := range includes {
+		layoutCopy := make([]string, len(layouts))
+		copy(layoutCopy, layouts)
+		files := append(layoutCopy, include)
+		r.AddFromFiles(filepath.Base(include), files...)
+	}
+	return r
 }

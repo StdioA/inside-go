@@ -28,7 +28,7 @@ func Archive(c *gin.Context) {
 }
 
 func NewPostPage(c *gin.Context) {
-	c.File("templates/new.html")
+	c.HTML(http.StatusOK, "new.html", gin.H{})
 }
 
 func NewPostHandler(c *gin.Context) {
@@ -59,7 +59,7 @@ func EditPost(c *gin.Context) {
 	}
 	post.LoadComments()
 	prev, next := post.PrevAndNextID()
-	c.HTML(http.StatusOK, "edit.tmpl", gin.H{
+	c.HTML(http.StatusOK, "edit.html", gin.H{
 		"post": post,
 		"prev": prev,
 		"next": next,

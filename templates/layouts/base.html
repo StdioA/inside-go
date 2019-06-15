@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-    <title>{{ .title }}</title>
-    <link rel="stylesheet" href="static/mblog/css/common.min.css">
-    {% block library %}{% endblock %}
+    <title>{{ template "title" . }}</title>
+    <link rel="stylesheet" href="/static/mblog/css/common.min.css">
+    {{ template "library" . }}
 </head>
 
 <body>
-    {{template "index.html"}}
+    {{template "index" .}}
 </body>
 </html>

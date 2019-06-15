@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-    <title>Inside</title>
-    <link rel="stylesheet" href="/static/mblog/css/common.min.css">
+{{ define "title" }}Inside{{ end }}
+{{ define "library" }}
     <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
-</head>
-<body>
+{{ end }}
+{{ define "index" }}
     <div id="content_bg" post-id="{{.post.ID}}">
         <div class="row">
             <div class="col v2 center">
@@ -58,5 +53,4 @@
         </div>
     </div>
     <script type="text/javascript" src="/static/mblog/js/edit.js"></script>
-</body>
-</html>
+{{ end }}
