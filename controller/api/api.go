@@ -12,7 +12,7 @@ import (
 func GetPost(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.String(http.StatusBadRequest, "wrong id")
+		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 	post := db.GetExistPost(id, true)
@@ -30,7 +30,7 @@ func GetPost(c *gin.Context) {
 func UpdatePost(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, vm.Error("ID format error"))
+		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 	post := db.GetPost(id)
@@ -52,7 +52,7 @@ func UpdatePost(c *gin.Context) {
 func DeletePost(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, vm.Error("ID format error"))
+		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 	post := db.GetPost(id)
@@ -65,13 +65,10 @@ func DeletePost(c *gin.Context) {
 }
 
 func ListComments(c *gin.Context) {
-	var (
-		postID int
-		err    error
-	)
 	postIDS := c.Param("id")
-	if postID, err = strconv.Atoi(postIDS); err != nil {
-		c.JSON(http.StatusBadRequest, vm.Error("ID format error"))
+	postID, err := strconv.Atoi(postIDS)
+	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 	post := db.GetExistPost(postID, true)
@@ -89,13 +86,10 @@ func ListComments(c *gin.Context) {
 }
 
 func CreateComment(c *gin.Context) {
-	var (
-		postID int
-		err    error
-	)
 	postIDS := c.Param("id")
-	if postID, err = strconv.Atoi(postIDS); err != nil {
-		c.JSON(http.StatusBadRequest, vm.Error("ID format error"))
+	postID, err := strconv.Atoi(postIDS)
+	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 	post := db.GetExistPost(postID, true)

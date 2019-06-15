@@ -6,17 +6,23 @@ import (
 	"github.com/stdioa/inside-go/controller/post"
 )
 
+var authHandler = gin.BasicAuth(gin.Accounts{
+	"admin": "password",
+})
+
 func Register(router *gin.Engine) {
+	loadTemplates("templates/")
+
 	router.Static("/static", "./static")
 	router.LoadHTMLGlob("templates/*")
 
 	router.GET("/", post.Index)
 	router.GET("/archive", post.Archive)
 	mblog := router.Group("/mblog")
-	mblog.GET("/new", post.NewPostPage)
-	mblog.POST("/new", post.NewPostHandler)
+	mblog.GET("/new", authHandler, post.NewPostPage)
+	mblog.POST("/new", authHandler, post.NewPostHandler)
 	mblog.GET("/posts/:id", post.Post)
-	mblog.GET("/posts/:id/edit", post.EditPost)
+	mblog.GET("/posts/:id/edit", authHandler, post.EditPost)
 
 	apiGroup := router.Group("/api")
 	apiGroup.GET("/posts/:id", api.GetPost)
