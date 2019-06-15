@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>Inside</title>
+    <link rel="stylesheet" href="/static/mblog/css/common.min.css">
+    <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+</head>
+<body>
+    <div id="content_bg" post-id="{{.post.ID}}">
+        <div class="row">
+            <div class="col v2 center">
+                <div id="form">
+                    <p><textarea name="content" rows="5" cols="20">{{.post.Content}}</textarea></p>
+                    <p><input type="checkbox" name="exist" {{if .post.Exist}}checked="checked" {{end}}>Exist</input>
+                    </p>
+                    <button id="update">更改</button>
+                    <button id="delete">删除</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col v2 right time">
+                <p>{{.post.CreatedAt.Format "2006-01-02 15:04:05"}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col v2">
+                <h3>Comments</h3>
+                {{range .post.Comments}}
+                <p>{{.Author}}：{{.Content}}</p>
+                {{end}}
+                <div id="comment" class="center" method="post">
+                    <p>
+                        <label for="comment_nickname" class="form-l" for="author">昵称：</label>
+                        <input type="text" class="form-r" name="author" />
+                    </p>
+                    <p>
+                        <label for="comment_nickname" class="form-l" for="content">内容：</label>
+                        <input type="text" class="form-r" name="content" />
+                    </p>
+                    <p>
+                        <button type="submit" value="评论">评论</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col v2 center">
+                <div class="col {{if eq .prev 0}}disabled{{end}}">
+                    <a href="/mblog/posts/{{.prev}}/edit" class="link">上一篇</a>
+                </div>
+                <div class="col {{if eq .next 0}}disabled{{end}}">
+                    <a href="/mblog/posts/{{.next}}/edit" class="link">下一篇</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="/static/mblog/js/edit.js"></script>
+</body>
+</html>

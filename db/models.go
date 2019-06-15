@@ -61,6 +61,12 @@ func GetExistPost(id int, exists bool) *Post {
 	return &post
 }
 
+func LatestPost() *Post {
+	post := new(Post)
+	db.Order("id desc").First(post)
+	return post
+}
+
 func ListPosts(id, count int) []Post {
 	var result []Post
 	query := map[string]interface{}{
@@ -73,6 +79,15 @@ func ListPosts(id, count int) []Post {
 	}
 	querySet.Order("id desc").Limit(count).Find(&result)
 	return result
+}
+
+func CreatePost(content string) *Post {
+	post := &Post{
+		Content: content,
+		Exist:   true,
+	}
+	db.Create(post)
+	return post
 }
 
 func init() {

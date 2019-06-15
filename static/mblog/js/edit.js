@@ -53,7 +53,7 @@ $(document).ready(function () {
   });
   $("#comment button").on("click", function (event) {
     var post_id = $("#content_bg").attr("post-id");
-    var url = "/api/comment/"+post_id;
+    var url = "/api/comments/"+post_id;
     console.log(url);
     $.post(url, {
               csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),

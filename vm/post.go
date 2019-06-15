@@ -1,13 +1,9 @@
 package vm
 
-import (
-	"time"
-)
-
 type Post struct {
 	ID        uint      `json:"id"`
 	Content   string    `json:"content"`
-	CreatedAt time.Time `json:"pub_date"`
+	CreatedAt string    `json:"pub_date"`
 	Comments  []Comment `json:"comments"`
 }
 

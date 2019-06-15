@@ -6,7 +6,7 @@ func SerializePost(post *db.Post) Post {
 	postVM := Post{
 		post.ID,
 		post.Content,
-		post.CreatedAt,
+		post.CreatedAt.Format("2006-01-02 15:04:05"),
 		SerializeComments(post.Comments),
 	}
 	return postVM
