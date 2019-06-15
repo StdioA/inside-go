@@ -6,6 +6,7 @@ import (
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
 	"github.com/stdioa/inside-go/controller/api"
+	"github.com/stdioa/inside-go/controller/backstage"
 	"github.com/stdioa/inside-go/controller/post"
 )
 
@@ -19,6 +20,7 @@ func Register(router *gin.Engine) {
 
 	router.GET("/", post.Index)
 	router.GET("/archive", post.Archive)
+
 	mblog := router.Group("/mblog")
 	mblog.GET("/new", authHandler, post.NewPostPage)
 	mblog.POST("/new", authHandler, post.NewPostHandler)
@@ -35,6 +37,11 @@ func Register(router *gin.Engine) {
 	apiGroup.GET("/archive", api.Archive)
 	apiGroup.GET("/archive/:id", api.Archive)
 	apiGroup.GET("/archive/:id/counts/:count", api.Archive)
+
+	backGroup := router.Group("/backstage", authHandler)
+	backGroup.GET("/", backstage.Index)
+	backGroup.GET("/export", backstage.Export)
+	backGroup.POST("/import", backstage.Import)
 }
 
 func loadTemplates(templatesDir string) multitemplate.Renderer {

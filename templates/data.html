@@ -1,0 +1,14 @@
+{{ define "title" }}Data{{ end }}
+{{ define "library" }}
+{{ end }}
+{{ define "index" }}
+<div id="content_bg">
+    <h1>Data Operation</h1>
+    <form enctype="multipart/form-data" action="/backstage/import" method="post">
+        <!-- <p><textarea name="content" rows="5" cols="20"></textarea></p> -->
+        <input type="file" name="data" />
+        <input type="submit" value="导入"></input>
+    </form>
+    <a href="/backstage/export"><button>导出</button></a>
+</div>
+{{ end }}

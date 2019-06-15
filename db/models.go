@@ -1,8 +1,6 @@
 package db
 
 import (
-	"fmt"
-
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
@@ -55,6 +53,16 @@ func (post *Post) Update(content string, exist bool) *Post {
 	return post
 }
 
+func (post *Post) Save() *Post {
+	db.Save(post)
+	return post
+}
+
+func (comment *Comment) Save() *Comment {
+	db.Save(comment)
+	return comment
+}
+
 func GetPost(id int) *Post {
 	var post Post
 	db.First(&post, id)
@@ -64,7 +72,6 @@ func GetPost(id int) *Post {
 func GetExistPost(id int, exists bool) *Post {
 	var post Post
 	db.Where("id=? AND exist=?", id, exists).First(&post)
-	fmt.Println(post)
 	return &post
 }
 
@@ -84,7 +91,16 @@ func ListPosts(id, count int) []Post {
 	if id > 0 {
 		querySet = querySet.Where("id <= ?", id)
 	}
-	querySet.Order("id desc").Limit(count).Find(&result)
+	if count > 0 {
+		querySet = querySet.Limit(count)
+	}
+	querySet.Order("id desc").Find(&result)
+	return result
+}
+
+func AllPosts() []Post {
+	var result []Post
+	db.Order("id").Find(&result)
 	return result
 }
 
