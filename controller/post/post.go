@@ -13,6 +13,7 @@ func Index(c *gin.Context) {
 	post := db.LatestPost()
 	if post.ID == 0 {
 		c.Status(http.StatusNotFound)
+		c.File("static/404.html")
 		return
 	}
 	redirectURL := "/mblog/posts/" + strconv.Itoa(int(post.ID))
@@ -50,11 +51,13 @@ func EditPost(c *gin.Context) {
 	postIDS := c.Param("id")
 	if postID, err = strconv.Atoi(postIDS); err != nil {
 		c.Status(http.StatusNotFound)
+		c.File("static/404.html")
 		return
 	}
 	post := db.GetPost(postID)
 	if post.ID == 0 {
 		c.Status(http.StatusNotFound)
+		c.File("static/404.html")
 		return
 	}
 	post.LoadComments()
