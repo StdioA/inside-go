@@ -9,7 +9,7 @@ $(document).ready(function () {
 
   $("#form button").on("click", function (event) {
     var post_id = $("#content_bg").attr("post-id");
-    var url = "/api/"+post_id;
+    var url = "/api/posts/"+post_id;
     var button = event.target;
 
     if (button.id == "update") {

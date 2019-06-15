@@ -27,6 +27,43 @@ func GetPost(c *gin.Context) {
 	c.JSON(http.StatusOK, postVM)
 }
 
+func UpdatePost(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, vm.Error("ID format error"))
+		return
+	}
+	post := db.GetPost(id)
+	if post.ID == 0 {
+		c.JSON(http.StatusNotFound, vm.Error("Post does not exist"))
+		return
+	}
+	// TODO
+	type updateForm struct {
+		Content string `json:"content"`
+		Exist   bool   `json:"exist"`
+	}
+	form := updateForm{}
+	c.BindJSON(&form)
+	post.Update(form.Content, form.Exist)
+	c.JSON(http.StatusOK, vm.SuccessVM{true})
+}
+
+func DeletePost(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, vm.Error("ID format error"))
+		return
+	}
+	post := db.GetPost(id)
+	if post.ID == 0 {
+		c.JSON(http.StatusNotFound, vm.Error("Post does not exist"))
+		return
+	}
+	post.Update(post.Content, false)
+	c.JSON(http.StatusOK, vm.SuccessVM{true})
+}
+
 func ListComments(c *gin.Context) {
 	var (
 		postID int
@@ -34,7 +71,7 @@ func ListComments(c *gin.Context) {
 	)
 	postIDS := c.Param("id")
 	if postID, err = strconv.Atoi(postIDS); err != nil {
-		c.String(http.StatusBadRequest, "ID format error")
+		c.JSON(http.StatusBadRequest, vm.Error("ID format error"))
 		return
 	}
 	post := db.GetExistPost(postID, true)
@@ -58,7 +95,7 @@ func CreateComment(c *gin.Context) {
 	)
 	postIDS := c.Param("id")
 	if postID, err = strconv.Atoi(postIDS); err != nil {
-		c.String(http.StatusBadRequest, "ID format error")
+		c.JSON(http.StatusBadRequest, vm.Error("ID format error"))
 		return
 	}
 	post := db.GetExistPost(postID, true)

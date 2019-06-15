@@ -48,6 +48,13 @@ func (post *Post) CreateComment(author, content string) *Comment {
 	return &comment
 }
 
+func (post *Post) Update(content string, exist bool) *Post {
+	post.Content = content
+	post.Exist = exist
+	db.Save(post)
+	return post
+}
+
 func GetPost(id int) *Post {
 	var post Post
 	db.First(&post, id)

@@ -20,6 +20,8 @@ func Register(router *gin.Engine) {
 
 	apiGroup := router.Group("/api")
 	apiGroup.GET("/posts/:id", api.GetPost)
+	apiGroup.PUT("/posts/:id", api.UpdatePost)
+	apiGroup.DELETE("/posts/:id", api.DeletePost)
 	apiGroup.GET("/comments/:id", api.ListComments)
 	apiGroup.POST("/comments/:id", api.CreateComment)
 
